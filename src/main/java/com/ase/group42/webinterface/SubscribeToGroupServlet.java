@@ -21,7 +21,7 @@ public class SubscribeToGroupServlet extends HttpServlet {
 
         //TODO add group information (JSON?)
         String group = req.getParameter("groupselect");
-        student = new Student(user.getEmail(), "Seppl", "12.32.42", Integer.parseInt(group));
+        student = new Student(user.getEmail(), Integer.parseInt(group));
 
         // Use Objectify to save the greeting and now() is used to make the call synchronously as we
         // will immediately get a new page using redirect and we want the data to be present.

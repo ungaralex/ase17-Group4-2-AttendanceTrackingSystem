@@ -12,6 +12,13 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.ase.group42.webinterface.Student" %>
 <%@ page import="com.ase.group42.webinterface.AttendanceTracking" %>
+<%@ page import="org.json.simple.JSONArray" %>
+<%@ page import="org.json.simple.parser.JSONParser" %>
+<%@ page import="java.io.FileReader" %>
+<%@ page import="org.json.simple.parser.ParseException" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="org.json.simple.JSONObject" %>
+<%@ page import="java.io.File" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <html>
@@ -39,13 +46,14 @@
                 .ancestor(trackingKey)
                 .order("email")
                 .list();
-        Student toSearch = new Student(user.getEmail(), "", "", -1);
+        Student toSearch = new Student(user.getEmail(), -1);
 %>
 <p>Hello, ${fn:escapeXml(user.nickname)}! (You can
     <a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">sign out</a>.)</p>
 
 <%
-    if (!students.contains(toSearch)) {
+    int sIdx = students.indexOf(toSearch);
+    if (sIdx == -1) {
 %>
 <form action="/sign" method="post">
     <select name="groupselect">
@@ -53,11 +61,38 @@
         <option value="2">Group 2</option>
         <option value="3">Group 3</option>
         <option value="4">Group 4</option>
+        <option value="5">Group 5</option>
+        <option value="6">Group 6</option>
     </select>
     <div><input type="submit" value="Save group"/></div>
     <input type="hidden" name="guestbookName" value="${fn:escapeXml(guestbookName)}"/>
 </form>
 <%
+    } else {
+        try {
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            File gFile = new File(classLoader.getResource("groups.json").getFile());
+            JSONArray groups = (JSONArray) new JSONParser().parse(new FileReader(gFile));
+            toSearch = students.get(sIdx);
+            JSONObject group = (JSONObject) groups.get(toSearch.group);
+
+            pageContext.setAttribute("group", (String) group.get("group"));
+            pageContext.setAttribute("instructor", (String) group.get("instructor"));
+            pageContext.setAttribute("day", (String) group.get("day"));
+            pageContext.setAttribute("room", (String) group.get("room"));
+            pageContext.setAttribute("time", (String) group.get("time"));
+%>
+
+<p><b>Group: </b>${fn:escapeXml(group)}</p>
+<p><b>Instructor: </b>${fn:escapeXml(instructor)}</p>
+<p><b>Day: </b>${fn:escapeXml(day)}</p>
+<p><b>Room: </b>${fn:escapeXml(room)}</p>
+<p><b>Time: </b>${fn:escapeXml(time)}</p>
+
+<%
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 } else {
 %>
