@@ -74,7 +74,7 @@
             File gFile = new File(classLoader.getResource("groups.json").getFile());
             JSONArray groups = (JSONArray) new JSONParser().parse(new FileReader(gFile));
             toSearch = students.get(sIdx);
-            JSONObject group = (JSONObject) groups.get(toSearch.group);
+            JSONObject group = (JSONObject) groups.get(toSearch.group-1);
 
             pageContext.setAttribute("group", (String) group.get("group"));
             pageContext.setAttribute("instructor", (String) group.get("instructor"));
@@ -98,7 +98,7 @@
 %>
 <p>Hello!
     <a href="<%= userService.createLoginURL(request.getRequestURI()) %>">Sign in</a>
-    to include your name with greetings you post.</p>
+    to subscribe to a group or view your group selection.</p>
 <%
     }
 %>
