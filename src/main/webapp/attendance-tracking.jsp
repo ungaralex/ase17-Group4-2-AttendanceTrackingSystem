@@ -16,9 +16,10 @@
 <%@ page import="org.json.simple.parser.JSONParser" %>
 <%@ page import="java.io.FileReader" %>
 <%@ page import="org.json.simple.parser.ParseException" %>
-<%@ page import="java.util.Map" %>
 <%@ page import="org.json.simple.JSONObject" %>
 <%@ page import="java.io.File" %>
+<%@ page import="com.ase.group42.webinterface.Attendance" %>
+<%@ page import="java.util.Random" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <html>
@@ -89,7 +90,31 @@
 <p><b>Room: </b>${fn:escapeXml(room)}</p>
 <p><b>Time: </b>${fn:escapeXml(time)}</p>
 
+<br><p><b>Last 10 attendances: </b></p>
 <%
+            List<Attendance> attendances = ObjectifyService.ofy()
+                    .load()
+                    .type(Attendance.class)
+                    .ancestor(trackingKey)
+                    .order("-dateId")
+                    .list();
+            int ctr = 0;
+            for (Attendance atd : attendances) {
+                if (atd.studentId == toSearch.id) {
+                    pageContext.setAttribute("atd", atd.toString());
+%>
+<p>Attendance on: ${fn:escapeXml(atd)}</p>
+<%
+                    ctr++;
+                }
+                if (ctr == 10)
+                    break;
+            }
+            if (ctr == 0) {
+%>
+<p><b>No attendances listed!</b></p>
+<%
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }

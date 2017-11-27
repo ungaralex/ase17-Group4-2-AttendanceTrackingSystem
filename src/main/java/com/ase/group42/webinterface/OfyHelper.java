@@ -30,6 +30,7 @@ public class OfyHelper implements ServletContextListener {
   public void contextInitialized(ServletContextEvent event) {
     ObjectifyService.register(AttendanceTracking.class);
     ObjectifyService.register(Student.class);
+    ObjectifyService.register(Attendance.class);
   }
 
   @Override

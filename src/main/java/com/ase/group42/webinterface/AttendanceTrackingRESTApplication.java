@@ -17,8 +17,9 @@ public class AttendanceTrackingRESTApplication extends Application {
 	 */
 	public Restlet createInboundRoot() {
 		Router router = new Router(getContext());
-		
-		router.attach("/rest/attendance", AttendanceResource.class);
+
+		router.attach("/attendance", AttendanceTrackingResource.class);
+		router.attach("/attendance/{attendanceId}", AttendanceResource.class);
 		
 		return router;
 	}

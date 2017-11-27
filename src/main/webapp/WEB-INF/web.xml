@@ -14,6 +14,20 @@
         <url-pattern>/sign</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>rest</servlet-name>
+        <servlet-class>org.restlet.ext.servlet.ServerServlet</servlet-class>
+        <init-param>
+            <param-name>org.restlet.application</param-name>
+            <param-value>com.ase.group42.webinterface.AttendanceTrackingRESTApplication</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>rest</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
+    </servlet-mapping>
+
     <welcome-file-list>
         <welcome-file>attendance-tracking.jsp</welcome-file>
     </welcome-file-list>
