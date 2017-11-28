@@ -48,11 +48,13 @@
                 .order("email")
                 .list();
         Student toSearch = new Student(user.getEmail(), -1);
+
 %>
 <p>Hello, ${fn:escapeXml(user.nickname)}! (You can
     <a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">sign out</a>.)</p>
 
 <%
+
     int sIdx = students.indexOf(toSearch);
     if (sIdx == -1) {
 %>
@@ -82,6 +84,11 @@
             pageContext.setAttribute("day", (String) group.get("day"));
             pageContext.setAttribute("room", (String) group.get("room"));
             pageContext.setAttribute("time", (String) group.get("time"));
+
+            /* START Testing */
+            Attendance att = new Attendance(toSearch, 1L, true);
+            ObjectifyService.ofy().save().entity(att).now();
+            /* END Testin */
 %>
 
 <p><b>Group: </b>${fn:escapeXml(group)}</p>
