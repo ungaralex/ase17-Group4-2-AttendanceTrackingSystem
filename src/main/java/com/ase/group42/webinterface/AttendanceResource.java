@@ -7,6 +7,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
+import org.restlet.representation.Variant;
+import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 
 import com.googlecode.objectify.Key;
@@ -15,7 +17,8 @@ import com.googlecode.objectify.ObjectifyService;
 public class AttendanceResource extends ServerResource {
 	
 	@SuppressWarnings("unchecked")
-	public Representation represent() {
+	@Get
+	public Representation represent(Variant variant) {
 		
 		JSONArray list = new JSONArray();
 		
