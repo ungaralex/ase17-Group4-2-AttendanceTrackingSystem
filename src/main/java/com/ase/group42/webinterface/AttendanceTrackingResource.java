@@ -49,7 +49,7 @@ public class AttendanceTrackingResource extends ServerResource {
             for (Attendance attendance : attendanceList) {
                 Element attendanceElement = doc.createElement("attendance");
 
-                Element attendanceIdElement = doc.createElement("attandanceId");
+                Element attendanceIdElement = doc.createElement("attendanceId");
                 attendanceIdElement.appendChild(doc.createTextNode(attendance.attendanceId + ""));
                 attendanceElement.appendChild(attendanceIdElement);
 
