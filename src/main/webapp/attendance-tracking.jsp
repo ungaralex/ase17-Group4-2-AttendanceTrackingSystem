@@ -107,7 +107,7 @@
                     .list();
             int ctr = 0;
             for (Attendance atd : attendances) {
-                if (atd.studentId == toSearch.id) {
+                if (atd.studentId.equals(toSearch.id)) {
                     pageContext.setAttribute("atd", atd.toString());
 %>
 <p>Attendance on: ${fn:escapeXml(atd)}</p>
