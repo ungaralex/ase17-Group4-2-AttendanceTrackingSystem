@@ -86,7 +86,7 @@
             pageContext.setAttribute("time", (String) group.get("time"));
 
             /* START Testing */
-            Attendance att = new Attendance(toSearch, 1L, true);
+            Attendance att = new Attendance(toSearch, 1, "dummyToken123", true);
             ObjectifyService.ofy().save().entity(att).now();
             /* END Testin */
 %>

@@ -65,6 +65,10 @@ public class AttendanceTrackingResource extends ServerResource {
                 dateIdElement.appendChild(doc.createTextNode(attendance.dateId + ""));
                 attendanceElement.appendChild(dateIdElement);
 
+                Element tokenElement = doc.createElement("token");
+                tokenElement.appendChild(doc.createTextNode(attendance.token));
+                attendanceElement.appendChild(tokenElement);
+
                 Element presentedElement = doc.createElement("presented");
                 presentedElement.appendChild(doc.createTextNode(attendance.presented + ""));
                 attendanceElement.appendChild(presentedElement);
