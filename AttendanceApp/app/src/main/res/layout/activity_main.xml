@@ -16,21 +16,40 @@
             android:id="@+id/bRequestQR"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+            android:layout_below="@+id/emailInput"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="89dp"
+            android:layout_marginTop="39dp"
             android:text="Request QR Code"
             tools:layout_editor_absoluteX="120dp"
             tools:layout_editor_absoluteY="89dp" />
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="220dp"
-            android:layout_height="220dp"
+            android:layout_width="260dp"
+            android:layout_height="260dp"
             android:layout_below="@+id/bRequestQR"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="46dp"
-            app:srcCompat="@android:color/background_light" />
+            android:layout_marginTop="25dp"
+            app:srcCompat="@android:color/white" />
+
+        <TextView
+            android:id="@+id/debugText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="21dp" />
+
+        <EditText
+            android:id="@+id/emailInput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="26dp"
+            android:ems="10"
+            android:inputType="textEmailAddress"
+            android:text="Enter your email" />
 
     </RelativeLayout>
 

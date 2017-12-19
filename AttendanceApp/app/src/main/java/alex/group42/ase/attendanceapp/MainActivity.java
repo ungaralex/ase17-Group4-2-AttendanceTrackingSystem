@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -53,30 +54,38 @@ public class MainActivity extends AppCompatActivity {
         // END ACCESS
 
         Button buttonOne = findViewById(R.id.bRequestQR);
-        final Context context = this;
         buttonOne.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                generateQRCode(context);
+                generateQRCode();
             }
         });
     }
 
-    private void generateQRCode(Context context) {
+    private void generateQRCode() {
         String urlGetStudent = "http://ase-2017-alex.appspot.com/rest/student/";
         String urlGetToken = "http://ase-2017-alex.appspot.com/rest/tokens/";
 
         // TODO get gmail address
-        //String accountName = getGmail(context);
-        String accountName = "alex.ungar94@gmail.com";
+        String accountName = getGmail();
 
         try {
+            TextView infoOut = findViewById(R.id.debugText);
+
             Document student = parseXMLString(new ClientResource(urlGetStudent + accountName).get().getText());
             String studentId = student.getElementsByTagName("studentId").item(0).getTextContent();
-            if (studentId.equals("NOT_FOUND")) return; //TODO print error
+            if (studentId.equals("NOT_FOUND")) {
+                infoOut.setText("You are not registered!");
+                return;
+            }
 
             Document token = parseXMLString(new ClientResource(urlGetToken + studentId).get().getText());
             String tokenString = token.getElementsByTagName("token").item(0).getTextContent();
-            if (tokenString.equals("WRONG_DATE")) return; //TODO print error
+            if (tokenString.equals("WRONG_DATE")) {
+                infoOut.setText("This is not your timeslot!");
+                return;
+            }
+
+            infoOut.setText("");
 
             // http://www.java2s.com/Tutorials/Java/XML/How_to_convert_org_w3c_dom_Document_to_String.htm
             Document attendanceXML = createAttendanceXML(studentId, tokenString);
@@ -109,6 +118,11 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+    }
+
+    private String getGmail() {
+        EditText editText = findViewById(R.id.emailInput);
+        return editText.getText().toString();
     }
 
     private Document parseXMLString(String xmlString) {
