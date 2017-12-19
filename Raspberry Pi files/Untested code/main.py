@@ -39,7 +39,8 @@ def trackAttendance(presented):
     cad.lcd.clear()
     cad.lcd.write('Scan successfull!')
     xml = xmlUtils.parse(qrcode)
-    xml = xmlUtils.setPresented(presented)
+    xml = xmlUtils.setPresented(xml, presented)
+    xmlString = xmlUtils.toString(xml)
     success = requestHandler.postAttendance(xml)
     
     cad.lcd.clear()
