@@ -20,8 +20,9 @@ public class AttendanceTrackingRESTApplication extends Application {
 
 		router.attach("/attendance", AttendanceTrackingResource.class);
 		router.attach("/attendance/{attendanceId}", AttendanceResource.class);
-		router.attach("/tokens/{studentId}/{weekNumber}", AttendanceTokenResource.class);
-		router.attach("/post/attendance", PostAttendanceResource.class);
+		router.attach("/tokens/{studentId}", AttendanceTokenResource.class);
+		router.attach("/post/attendance", PostMinimalAttendanceResource.class);
+		router.attach("/student/{mail}", StudentInfoResource.class);
 
 		return router;
 	}

@@ -30,9 +30,9 @@ public class PostAttendanceResource extends ServerResource{
 
             Map<String, String> infoMap = new HashMap<>();
             for (int i=0; i<attendanceInfo.getLength(); i++) {
-                                                    Node node = attendanceInfo.item(i);
-                                                    infoMap.put(node.getNodeName(), node.getTextContent());
-                                                }
+                Node node = attendanceInfo.item(i);
+                infoMap.put(node.getNodeName(), node.getTextContent());
+            }
 
             Key<AttendanceTracking> theTracking = Key.create(AttendanceTracking.class, "defaultTracking");
             Key<Student> studentKey = Key.create(theTracking, Student.class, Long.parseLong(infoMap.get("studentId")));
