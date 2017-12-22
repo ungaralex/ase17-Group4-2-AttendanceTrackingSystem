@@ -4,41 +4,47 @@
     "day": "Monday",
     "instructor": "Ana",
     "room": "5611.01.018",
-    "time": "09:00-11:00"
+    "time": "09:00-11:00",
+    "start": "1509955200000"
   },
   {
     "group": "2",
     "day": "Monday",
     "instructor": "Sebastian",
     "room": "5611.01.018",
-    "time": "13:45-15:15"
+    "time": "13:45-15:15",
+    "start": "1509972300000"
   },
   {
     "group": "3",
     "day": "Monday",
     "instructor": "Sebastian",
     "room": "5611.01.018",
-    "time": "15:15-16:45"
+    "time": "15:15-16:45",
+    "start": "1509977700000"
   },
   {
     "group": "4",
     "day": "Tuesday",
     "instructor": "Ehsan",
     "room": "5611.01.18",
-    "time": "15:00-17:00"
+    "time": "15:00-17:00",
+    "start": "1510063200000"
   },
   {
     "group": "5",
     "day": "Wednesday",
     "instructor": "Mohsen",
     "room": "5611.EG.038",
-    "time": "10:00-12:00"
+    "time": "10:00-12:00",
+    "start": "1510131600000"
   },
   {
     "group": "6",
     "day": "Wednesday",
     "instructor": "Saahil",
     "room": "5611.01.018",
-    "time": "12:00-14:00"
+    "time": "12:00-14:00",
+    "start": "1510138800000"
   }
 ]

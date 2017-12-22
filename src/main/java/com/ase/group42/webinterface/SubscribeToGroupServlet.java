@@ -30,4 +30,6 @@ public class SubscribeToGroupServlet extends HttpServlet {
 
         resp.sendRedirect("/attendance-tracking.jsp?group=" + group);
     }
+
+
 }

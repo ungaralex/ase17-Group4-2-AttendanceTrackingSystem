@@ -1,25 +1,24 @@
 <%-- //[START all]--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="com.google.appengine.api.users.User" %>
-<%@ page import="com.google.appengine.api.users.UserService" %>
-<%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
+<%@ page import="com.ase.group42.webinterface.Attendance" %>
+<%@ page import="com.ase.group42.webinterface.AttendanceTracking" %>
+<%@ page import="com.ase.group42.webinterface.Student" %>
 
 <%-- //[START imports]--%>
-<%@ page import="com.googlecode.objectify.Key" %>
-<%@ page import="com.googlecode.objectify.ObjectifyService" %>
+<%@ page import="com.google.appengine.api.users.User" %>
+<%@ page import="com.google.appengine.api.users.UserService" %>
 <%-- //[END imports]--%>
 
-<%@ page import="java.util.List" %>
-<%@ page import="com.ase.group42.webinterface.Student" %>
-<%@ page import="com.ase.group42.webinterface.AttendanceTracking" %>
+<%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
+<%@ page import="com.googlecode.objectify.Key" %>
+<%@ page import="com.googlecode.objectify.ObjectifyService" %>
 <%@ page import="org.json.simple.JSONArray" %>
-<%@ page import="org.json.simple.parser.JSONParser" %>
-<%@ page import="java.io.FileReader" %>
-<%@ page import="org.json.simple.parser.ParseException" %>
 <%@ page import="org.json.simple.JSONObject" %>
+<%@ page import="org.json.simple.parser.JSONParser" %>
+<%@ page import="org.json.simple.parser.ParseException" %>
 <%@ page import="java.io.File" %>
-<%@ page import="com.ase.group42.webinterface.Attendance" %>
-<%@ page import="java.util.Random" %>
+<%@ page import="java.io.FileReader" %>
+<%@ page import="java.util.List" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <html>
@@ -85,10 +84,10 @@
             pageContext.setAttribute("room", (String) group.get("room"));
             pageContext.setAttribute("time", (String) group.get("time"));
 
-            /* START Testing */
-            Attendance att = new Attendance(toSearch, 1L, true);
-            ObjectifyService.ofy().save().entity(att).now();
-            /* END Testin */
+//            /* START Testing */
+//            Attendance att = new Attendance(toSearch, 1, "dummyToken123", true);
+//            ObjectifyService.ofy().save().entity(att).now();
+//            /* END Testin */
 %>
 
 <p><b>Group: </b>${fn:escapeXml(group)}</p>

@@ -65,6 +65,10 @@ public class AttendanceResource extends ServerResource {
                 dateIdElement.appendChild(doc.createTextNode(theAttendance.dateId + ""));
                 attendance.appendChild(dateIdElement);
 
+                Element tokenElement = doc.createElement("token");
+                tokenElement.appendChild(doc.createTextNode(theAttendance.token));
+                attendance.appendChild(tokenElement);
+
                 Element presentedElement = doc.createElement("presented");
                 presentedElement.appendChild(doc.createTextNode(theAttendance.presented + ""));
                 attendance.appendChild(presentedElement);

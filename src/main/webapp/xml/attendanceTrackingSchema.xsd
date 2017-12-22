@@ -16,6 +16,7 @@
                                         <element name="studentId" type="string"/>
                                         <element name="tutorialGroupId" type="string"/>
                                         <element name="dateId" type="string"/>
+                                        <element name="token" type="string"/>
                                         <element name="presented" type="string"/>
                                     </all>
                                 </complexType>
