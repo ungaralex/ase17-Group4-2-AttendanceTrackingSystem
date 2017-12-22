@@ -21,13 +21,13 @@ public class Attendance {
 
 	public Long studentId;
 	public Long tutorialGroupId;
-	@Index public Integer dateId;
+	@Index public Long dateId;
 	public boolean presented;
 	public String token;
 	
 	public Attendance() {}
 	
-	public Attendance(Long studentId, Long tutorialGroupId, Integer dateId, String token, boolean presented) {
+	public Attendance(Long studentId, Long tutorialGroupId, Long dateId, String token, boolean presented) {
 		this();
 		this.studentId = studentId;
 		this.tutorialGroupId = tutorialGroupId;
@@ -43,11 +43,11 @@ public class Attendance {
 	 * @param s the Student
 	 * @param week the current week
 	 */
-	public Attendance(Student s, Integer week, String token) {
+	public Attendance(Student s, Long week, String token) {
 		this(s.id, 0L + s.group, week, token, false);
 	}
 
-	public Attendance(Student s, Integer week, String token, boolean presented) {
+	public Attendance(Student s, Long week, String token, boolean presented) {
 		this(s.id, 0L + s.group, week, token, presented);
 	}
 

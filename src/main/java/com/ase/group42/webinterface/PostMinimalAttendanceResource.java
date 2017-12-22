@@ -2,6 +2,7 @@ package com.ase.group42.webinterface;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
+import org.json.simple.parser.ParseException;
 import org.restlet.data.MediaType;
 import org.restlet.ext.xml.DomRepresentation;
 import org.restlet.representation.Representation;
@@ -19,6 +20,9 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.ase.group42.webinterface.TimeUtils.checkDate;
+import static com.ase.group42.webinterface.TimeUtils.getWeekId;
 
 public class PostMinimalAttendanceResource extends ServerResource {
     @Post
@@ -49,36 +53,23 @@ public class PostMinimalAttendanceResource extends ServerResource {
             int weekId = getWeekId();
             if (student != null &&
                     student.tokens[weekId] != null &&
-                    student.tokens[weekId].equals(infoMap.get("token"))) {
-                    Attendance attendance = new Attendance(student, weekId, infoMap.get("token"), Boolean.parseBoolean(infoMap.get("presented")));
+                    student.tokens[weekId].equals(infoMap.get("token")) &&
+                    checkDate(student)) {
+                    Attendance attendance = new Attendance(student, new Date().getTime(), infoMap.get("token"), Boolean.parseBoolean(infoMap.get("presented")));
                     ObjectifyService.ofy().save().entity(attendance).now();
 
                     student.tokens[weekId] = null;
                     ObjectifyService.ofy().save().entity(student).now();
-            }
 
-            //if (student != null && student.tokens[Integer.parseInt(infoMap.get("dateId"))].equals(infoMap.get("token"))) {
-            //   Attendance attendance = new Attendance(student, Integer.parseInt(infoMap.get("dateId")), infoMap.get("token"), Boolean.parseBoolean(infoMap.get("presented")));
-            //    ObjectifyService.ofy().save().entity(attendance).now();
-            //    succes = "success";
-            //}
+                    succes = "success";
+            }
 
             wasSaved.appendChild(doc.createTextNode(succes));
             doc.appendChild(wasSaved);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
+        } catch (IOException | ParserConfigurationException | ParseException e) {
             e.printStackTrace();
         }
 
         return new DomRepresentation(MediaType.TEXT_XML, doc);
-    }
-
-    private int getWeekId() {
-        final long start = 1509922801000L;
-        Date current = new Date();
-        long weekId = (current.getTime() - start) / 604800000L;
-
-        return (int) weekId;
     }
 }
