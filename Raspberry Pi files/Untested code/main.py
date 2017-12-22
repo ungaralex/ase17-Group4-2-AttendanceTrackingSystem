@@ -28,7 +28,7 @@ cad = pifacecad.PiFaceCAD()
 listener = pifacecad.SwitchEventListener(chip=cad)
 
 cad.lcd.clear()
-cad.lcd.write('St. presented? Y/N')
+cad.lcd.write('Presented? Y/N')
 
 def trackAttendance(presented):
     global cad
@@ -37,7 +37,7 @@ def trackAttendance(presented):
     cad.lcd.write('Scanning...')
     qrcode = qrScanner.scan()
     cad.lcd.clear()
-    cad.lcd.write('Scan successfull!')
+    cad.lcd.write('Scan done.')
     xml = xmlUtils.parseXml(qrcode)
     xml = xmlUtils.setPresented(xml, presented)
     xmlString = xmlUtils.toString(xml)
@@ -48,13 +48,13 @@ def trackAttendance(presented):
     
     time.sleep(1)
     if success:
-        cad.lcd.write('Attendance was posted!')
+        cad.lcd.write('Att. posted!')
     else:
-        cad.lcd.write('An error occured...')
+        cad.lcd.write('Error!')
     
     time.sleep(3)
     cad.lcd.clear()
-    cad.lcd.write('Student presented? Y/N')
+    cad.lcd.write('Presented? Y/N')
     
 
 def hasPresented(event):

@@ -4,7 +4,7 @@ def parseXml(data):
     return EL.fromstring(data)
     
 def checkSuccess(xml):
-    return xml.getroot().text == 'success'
+    return xml.text == 'success'
 
 def setPresented(xml, presented):
     presentedTag = EL.SubElement(xml, 'presented')
