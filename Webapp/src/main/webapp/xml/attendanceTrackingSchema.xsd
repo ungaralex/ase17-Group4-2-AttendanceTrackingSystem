@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/guestbookSchema"
+        xmlns:tns="http://www.example.org/guestbookSchema" elementFormDefault="qualified">
+
+    <element name="attendanceTracking">
+        <complexType>
+            <all>
+                <element name="name" type="string" default="defaultTracking"/>
+                <element name="attendances" minOccurs="0">
+                    <complexType>
+                        <sequence>
+                            <element name="attendance" minOccurs="0" maxOccurs="unbounded">
+                                <complexType>
+                                    <all>
+                                        <element name="attendanceId" type="string"/>
+                                        <element name="studentId" type="string"/>
+                                        <element name="tutorialGroupId" type="string"/>
+                                        <element name="dateId" type="string"/>
+                                        <element name="token" type="string"/>
+                                        <element name="presented" type="string"/>
+                                    </all>
+                                </complexType>
+                            </element>
+                        </sequence>
+                    </complexType>
+                </element>
+            </all>
+        </complexType>
+    </element>
+
+</schema>
