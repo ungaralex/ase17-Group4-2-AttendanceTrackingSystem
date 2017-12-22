@@ -159,12 +159,9 @@ public class MainActivity extends AppCompatActivity {
             sId.appendChild(doc.createTextNode(studentId));
             Element tok = doc.createElement("token");
             tok.appendChild(doc.createTextNode(token));
-            Element presented = doc.createElement("presented");
-            presented.appendChild(doc.createTextNode("false"));
 
             attendance.appendChild(sId);
             attendance.appendChild(tok);
-            attendance.appendChild(presented);
 
             doc.appendChild(attendance);
         } catch (ParserConfigurationException e) {
