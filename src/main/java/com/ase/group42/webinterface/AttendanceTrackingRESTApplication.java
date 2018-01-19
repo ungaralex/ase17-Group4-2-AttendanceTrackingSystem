@@ -11,7 +11,7 @@ import org.restlet.security.MapVerifier;
 
 /**
  * RESTlet Application to provide root Restlet
- * @author frederic
+ * @author frederic, michael
  *
  */
 public class AttendanceTrackingRESTApplication extends Application {
@@ -25,27 +25,32 @@ public class AttendanceTrackingRESTApplication extends Application {
 		
 		// Section for Student Services, authentication through google account
 		Router studRouter = new Router(getContext());
-		studRouter.attach("/stud/attendance", AttendanceTrackingResource.class);
-		studRouter.attach("/stud/attendance/{attendanceId}", AttendanceResource.class);
-		studRouter.attach("/stud/tokens/{studentId}", AttendanceTokenResource.class);
-		studRouter.attach("/stud/info/{mail}", StudentInfoResource.class);
+		studRouter.attach("/attendance", AttendanceTrackingResource.class);
+		studRouter.attach("/attendance/{attendanceId}", AttendanceResource.class);
+		studRouter.attach("/tokens/{studentId}", AttendanceTokenResource.class);
+		studRouter.attach("/info/{mail}", StudentInfoResource.class);
 		
-		GaeAuthenticator studGuard = new GaeAuthenticator(getContext());
-	    studGuard.setNext(studRouter);
+		// Guard the restlet with BASIC authentication.
+		ChallengeAuthenticator studGuard = new ChallengeAuthenticator(null, ChallengeScheme.HTTP_BASIC, "testRealm");
+		// Instantiates a Verifier of identifier/secret couples based on a simple Map.
+		MapVerifier mapVerifier = new MapVerifier();
+		// Load a single static login/secret pair.
+		mapVerifier.getLocalSecrets().put("ase-student", "ase2017".toCharArray());
+		studGuard.setVerifier(mapVerifier);
 
 	    
 	    // Section for Tutor Services, hard coded authentication
 		Router tutRouter = new Router(getContext());
-		tutRouter.attach("/tut/postAttendance", PostMinimalAttendanceResource.class);
-		tutRouter.attach("/tut/attendance", AttendanceTrackingResource.class);
+		tutRouter.attach("/postAttendance", PostMinimalAttendanceResource.class);
+		tutRouter.attach("/attendance", AttendanceTrackingResource.class);
 		
 		// Guard the restlet with BASIC authentication.
 		ChallengeAuthenticator tutGuard = new ChallengeAuthenticator(null, ChallengeScheme.HTTP_BASIC, "testRealm");
 		// Instantiates a Verifier of identifier/secret couples based on a simple Map.
-		MapVerifier mapVerifier = new MapVerifier();
+		MapVerifier mapVerifier2 = new MapVerifier();
 		// Load a single static login/secret pair.
-		mapVerifier.getLocalSecrets().put("ase-tutor", "ase2017".toCharArray());
-		tutGuard.setVerifier(mapVerifier);
+		mapVerifier2.getLocalSecrets().put("ase-tutor", "ase2017".toCharArray());
+		tutGuard.setVerifier(mapVerifier2);
 		tutGuard.setNext(tutRouter);
 		
 		
