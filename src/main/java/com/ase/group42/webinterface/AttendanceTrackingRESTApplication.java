@@ -3,7 +3,6 @@ package com.ase.group42.webinterface;
 import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.data.ChallengeScheme;
-import org.restlet.ext.gae.GaeAuthenticator;
 import org.restlet.routing.Router;
 import org.restlet.routing.Template;
 import org.restlet.security.ChallengeAuthenticator;
@@ -11,7 +10,7 @@ import org.restlet.security.MapVerifier;
 
 /**
  * RESTlet Application to provide root Restlet
- * @author frederic, michael
+ * @author frederic, michael, alexander
  *
  */
 public class AttendanceTrackingRESTApplication extends Application {
@@ -37,6 +36,7 @@ public class AttendanceTrackingRESTApplication extends Application {
 		// Load a single static login/secret pair.
 		mapVerifier.getLocalSecrets().put("ase-student", "ase2017".toCharArray());
 		studGuard.setVerifier(mapVerifier);
+		studGuard.setNext(studRouter);
 
 	    
 	    // Section for Tutor Services, hard coded authentication
