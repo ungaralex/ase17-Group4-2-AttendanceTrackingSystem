@@ -1,21 +1,24 @@
 package alex.group42.ase.attendanceapp;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
@@ -43,6 +46,11 @@ import javax.xml.transform.stream.StreamResult;
 
 public class MainActivity extends AppCompatActivity {
 
+    private GoogleSignInClient mSignInClient = null;
+    private static final int RC_SIGN_IN = 1337;
+    private static final String TAG = "AttendanceApp.Main";
+    private String eMailFromAccount;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,12 +61,90 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
         // END ACCESS
 
+        //Google SignIn Config
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        mSignInClient = GoogleSignIn.getClient(this, gso);
+
         Button buttonOne = findViewById(R.id.bRequestQR);
         buttonOne.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
                 generateQRCode();
             }
         });
+
+        SignInButton signInButton = findViewById(R.id.sign_in_button);
+        signInButton.setOnClickListener(new SignInButton.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signIn();
+            }
+        });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        updateUI(account);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.w(TAG,"Called onActivityResult()");
+        Log.w(TAG,"Request code is " + requestCode);
+        super.onActivityResult(requestCode, resultCode, data);
+
+        //For sign in
+        if(requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+        }
+    }
+
+    private void handleSignInResult(Task<GoogleSignInAccount> task) {
+        Log.w(TAG,"Called handleSignInResult()");
+        try {
+            GoogleSignInAccount account = task.getResult(ApiException.class);
+            this.eMailFromAccount = account.getEmail();
+            Log.w(TAG,"Account mail is " + this.eMailFromAccount);
+            updateUI(account);
+        } catch(ApiException e) {
+            Log.w(TAG, "signInResult:SignIn failed with code="+e.getStatusCode());
+            updateUI(null);
+        }
+    }
+
+    private void signIn() {
+        Log.w(TAG, "Called signIn()");
+        Intent signInIntent = mSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+
+    /**
+     * This method changes the Activity's UI appearance based on the account status
+     * @param account A GoogleSignInAccount for this Activity. If this is non-null,
+     *                we assume successful login and change the UI appearance.
+     */
+    private void updateUI(GoogleSignInAccount account) {
+        if(account == null) {
+            return;
+        }
+        else {
+            //Change visibility of UI elements if account is present
+            Button qrBtn = findViewById(R.id.bRequestQR);
+            SignInButton signInButton = findViewById(R.id.sign_in_button);
+            TextView signInText = findViewById(R.id.signInText);
+            ImageView qrImg = findViewById(R.id.imageView);
+
+            signInButton.setVisibility(View.GONE);
+            signInText.setVisibility(View.GONE);
+            qrBtn.setVisibility(View.VISIBLE);
+            qrImg.setVisibility(View.VISIBLE);
+        }
     }
 
     private void generateQRCode() {
@@ -66,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
         String urlGetToken = "http://ase-2017-alex.appspot.com/rest/tokens/";
 
         // TODO get gmail address
-        String accountName = getGmail();
+        String accountName = getEmail();
 
         try {
             TextView infoOut = findViewById(R.id.debugText);
@@ -120,9 +206,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private String getGmail() {
-        EditText editText = findViewById(R.id.emailInput);
-        return editText.getText().toString();
+    private String getEmail() {
+        if (this.eMailFromAccount.isEmpty()) {
+            return null;
+        }
+        else {
+            return this.eMailFromAccount;
+        }
     }
 
     private Document parseXMLString(String xmlString) {
