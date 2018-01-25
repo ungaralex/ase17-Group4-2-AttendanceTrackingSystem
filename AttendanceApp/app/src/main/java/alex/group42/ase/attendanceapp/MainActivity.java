@@ -24,6 +24,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
+import org.restlet.data.ChallengeScheme;
 import org.restlet.resource.ClientResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -33,6 +34,7 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Base64;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -88,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        Log.w(TAG, "Last signed in account: " + account);
         updateUI(account);
     }
 
@@ -131,7 +134,15 @@ public class MainActivity extends AppCompatActivity {
      */
     private void updateUI(GoogleSignInAccount account) {
         if(account == null) {
-            return;
+            Button qrBtn = findViewById(R.id.bRequestQR);
+            SignInButton signInButton = findViewById(R.id.sign_in_button);
+            TextView signInText = findViewById(R.id.signInText);
+            ImageView qrImg = findViewById(R.id.imageView);
+
+            signInButton.setVisibility(View.VISIBLE);
+            signInText.setVisibility(View.VISIBLE);
+            qrBtn.setVisibility(View.GONE);
+            qrImg.setVisibility(View.GONE);
         }
         else {
             //Change visibility of UI elements if account is present
@@ -148,23 +159,36 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void generateQRCode() {
-        String urlGetStudent = "http://ase-2017-alex.appspot.com/rest/student/";
-        String urlGetToken = "http://ase-2017-alex.appspot.com/rest/tokens/";
 
-        // TODO get gmail address
         String accountName = getEmail();
+        if(accountName == null) {
+            updateUI(null);
+            return;
+        }
+
+        String urlGetStudent = "http://ase-2017-alex.appspot.com/rest/stud/info/" + accountName;
+        String urlGetToken = "http://ase-2017-alex.appspot.com/rest/stud/tokens/";
+
+
+
 
         try {
             TextView infoOut = findViewById(R.id.debugText);
-
-            Document student = parseXMLString(new ClientResource(urlGetStudent + accountName).get().getText());
+            Log.w(TAG, urlGetStudent);
+            ClientResource resource = new ClientResource(urlGetStudent);
+            resource.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "ase-student", "ase2017");
+            Document student = parseXMLString(resource.get().getText());
             String studentId = student.getElementsByTagName("studentId").item(0).getTextContent();
             if (studentId.equals("NOT_FOUND")) {
                 infoOut.setText("You are not registered!");
                 return;
             }
+            Log.w(TAG, studentId);
 
-            Document token = parseXMLString(new ClientResource(urlGetToken + studentId).get().getText());
+            String tokenAuthString = urlGetToken + studentId;
+            ClientResource tokenResource = new ClientResource(tokenAuthString);
+            tokenResource.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "ase-student", "ase2017");
+            Document token = parseXMLString(tokenResource.get().getText());
             String tokenString = token.getElementsByTagName("token").item(0).getTextContent();
             if (tokenString.equals("WRONG_DATE")) {
                 infoOut.setText("This is not your timeslot!");
@@ -207,6 +231,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String getEmail() {
+        if (this.eMailFromAccount == null) {
+            return null;
+        }
         if (this.eMailFromAccount.isEmpty()) {
             return null;
         }
